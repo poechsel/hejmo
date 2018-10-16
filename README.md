@@ -1,4 +1,4 @@
-# Mercari
+# Hejmo
 Project for mercari's hackathon
 
 ## Technologies:
