@@ -1,7 +1,6 @@
 ### Interface between this server and the Foursquare API. 
 ### Foursquare is useful to extract categories from locations.
 
-import json, requests
 import foursquare
 import auth.foursquare_secret as secret
 
@@ -25,7 +24,6 @@ def get_venue_ID(latitude, longitude):
         llAcc='100'
     )
     return client.venues.search(params)
-    
 
 def get_venue_details(venue_ID):
     return client.venues(venue_ID)
