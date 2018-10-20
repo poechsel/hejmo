@@ -19,6 +19,12 @@ import foursquare_api
 def is_subcategory_of(request, parent):
     return foursquare_api.is_subcategory_of(request, parent)
 
+def has_subcategory_of(request, parent):
+    for cat in request:
+        if is_subcategory_of(cat, parent):
+            return True
+    return False
+
 # get subcategories of 
 def get_subcategories_of(category):
     return foursquare_api.get_subcategories_of(category)
@@ -36,10 +42,21 @@ def flat_ratings_distance(r1, r2):
     return np.abs(r1 - r2)
 
 ## Generic distance measure (scalar product) weighted by confidence in ratings.
-def distance_with_confidence(ratings, confidence_levels, user1, user2, ratings_distance_fn=flat_ratings_distance):
-    normalizer = np.sum(confidence_levels[user1]*confidence_levels[user2])
-    return np.sum(ratings_distance_fn(ratings[user1], ratings[user2])*confidence_levels[user1]*confidence_levels[user2])/normalizer
+def distance_with_confidence(users_profiles, user1, user2, selected_categories=None, ratings_distance_fn=flat_ratings_distance):
+    profile1 = users_profiles[user1]
+    profile2 = users_profiles[user2]
 
+    distance = 0
+    normalizer = 0
+    if selected_categories == None:
+        for cat, value in profile1.items():
+            total_conf = profile1[cat]["confidence"]*profile2[cat]["confidence"]
+            normalizer += total_conf
+            distance += ratings_distance_fn(profile1[cat]["rating"], profile2[cat]["rating"])
+    else:
+        for cat in selected_categories:
+
+    return distance/normalizer
 
 ## Input:
 # users_visits: visit history data structure
@@ -69,14 +86,12 @@ def filter_by_location(users_visits, places, requested_category, lon, lat, max_d
 # target_category: match within specified subcategory
 ## Output:
 # [(score, user_id)] by descending order.
-def match_by_category(users, places, user_list, target_user, target_category):
+def match_by_category(users_profiles, places, user_list, target_user, target_category):
     scores = []
     selected_categories = get_subcategories_of(target_category)
     for user in user_list:
-        ratings = users[selected_categories, 0]
-        confidence_levels = users[selected_categories, 1]
-        score_category = distance_with_confidence(ratings, confidence_levels, user, target_user)
-        score = distance_with_confidence(users[:, 0], users[:, 1], user, target_user)
+        score_category = distance_with_confidence(users_profiles, user, target_user, selected_categories)
+        score = distance_with_confidence(users_profiles, user, target_user)
         # Score is a mix of general compatibility and intra-category compatibility.
         scores.append((score_category*(score+1)/2, user))
     list.sort(scores, reverse=True)
@@ -85,13 +100,10 @@ def match_by_category(users, places, user_list, target_user, target_category):
 ## Given a gaussian of center time, with given spread. 
 ## What's its value at target_time ?
 # between 0 and 1
-def get_time_value(time, spread, target_time):
-    one_day = 24*3600
-    tests = [time - target_time, time - one_day - target_time, time + one_day - target_time]
-
-    coef = 0
-    for test in tests:
-        coef = np.max(coef, np.exp(-(test/spread)**2))
+def get_time_value(visit_time, target_time):
+    two_hours = 2*3600
+    min_diff = min([np.abs(ti - target_time) for ti in visit_time])
+    coef = np.exp(-(min_diff/two_hours)**2)
     return 0.5 + 0.5*coef
 
 ## At which point should we factor in a place this far away?
@@ -106,13 +118,18 @@ def get_user_value(user_score, review, confidence):
     return user_score * review * confidence
 
 ## Operate a voting simulation taking into account matching and adequacy of each place.
-def vote_for_places(users_visits, places, scores, target_category, target_time, target_lon, target_lat):
+def vote_for_places(users_ratings, places, scores, target_category, target_time, target_lon, target_lat):
     tally = {}
     for score, user in scores:
-        for place_id, (time, spread, rating, confidence_level) in enumerate(users_visits[user]):
-            category, lon, lat = places[place_id]
-            if is_subcategory_of(category, target_category):
-                place_interest_time = get_time_value(time, spread, target_time)
+        for place_id, data in enumerate(users_ratings[user]):
+            visits = data["visits"]
+            rating = data["rating"]
+            confidence_level = data["confidence"]
+
+            categories, lon, lat = places[place_id]["categories"], places[place_id]["longitude"], places[place_id]["latitude"]
+
+            if has_subcategory_of(categories, target_category):
+                place_interest_time = get_time_value(visits, target_time)
                 place_interest_distance = get_distance_value(lon, lat, target_lon, target_lat)
                 place_interest_user = get_user_value(score, rating, confidence_level)
 
@@ -124,14 +141,14 @@ def vote_for_places(users_visits, places, scores, target_category, target_time, 
     return tally
 
 ## Recommendation algorithm.
-def recommend_me_something_please(users, users_visits, places, target_user, target_category, target_time, target_lon, target_lat):
-    interesting_users       = filter_by_location(users_visits, places, target_category, target_lon, target_lat)
-    scores_by_categories    = match_by_category(users, places, interesting_users, target_user, target_category)
-    votes = vote_for_places(users_visits, places, scores_by_categories, target_category, target_time, target_lon, target_lat)
+def recommend_me_something_please(users_profiles, users_ratings, places, target_user, target_category, target_time, target_lon, target_lat):
+    interesting_users       = filter_by_location(users_ratings, places, target_category, target_lon, target_lat)
+    scores_by_categories    = match_by_category(users_profiles, places, interesting_users, target_user, target_category)
+    votes = vote_for_places(users_ratings, places, scores_by_categories, target_category, target_time, target_lon, target_lat)
     place_id, value = zip(*votes.items())
     places_sorted = sorted(zip(value, place_id), reverse=True)
     result = []
     for _, place_id in places_sorted:
-        if not(place_id in users_visits[target_user]):
+        if not(place_id in users_ratings[target_user]):
             result.append(place_id)
     return result
