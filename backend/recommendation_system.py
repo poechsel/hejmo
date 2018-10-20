@@ -66,7 +66,7 @@ def filter_by_location(users_visits, places, requested_category, lon, lat, max_d
 # users: user category profile
 # places: places database
 # user_list: users to consider
-# target_category: match using only specified subcategory
+# target_category: match within specified subcategory
 ## Output:
 # [(score, user_id)] by descending order.
 def match_by_category(users, places, user_list, target_user, target_category):
@@ -75,20 +75,63 @@ def match_by_category(users, places, user_list, target_user, target_category):
     for user in user_list:
         ratings = users[selected_categories, 0]
         confidence_levels = users[selected_categories, 1]
-        score = distance_with_confidence(ratings, confidence_levels, user, target_user)
-        scores.append((score, user))
+        score_category = distance_with_confidence(ratings, confidence_levels, user, target_user)
+        score = distance_with_confidence(users[:, 0], users[:, 1], user, target_user)
+        # Score is a mix of general compatibility and intra-category compatibility.
+        scores.append((score_category*(score+1)/2, user))
     list.sort(scores, reverse=True)
     return scores
+
+## Given a gaussian of center time, with given spread. 
+## What's its value at target_time ?
+# between 0 and 1
+def get_time_value(time, spread, target_time):
+    one_day = 24*3600
+    tests = [time - target_time, time - one_day - target_time, time + one_day - target_time]
+
+    coef = 0
+    for test in tests:
+        coef = np.max(coef, np.exp(-(test/spread)**2))
+    return 0.5 + 0.5*coef
+
+## At which point should we factor in a place this far away?
+# between 0 and 1
+# Gaussian decrease: @2500m score is divided by 2. 
+#                    @4500m score is divided by 10. (possibility to tweak this/make it a parameter)
+def get_distance_value(lon, lat, target_lon, target_lat):
+    distance = utils.gps_distance(lon, lat, target_lon, target_lat)
+    return np.exp(-(distance/3000)**2)
+
+def get_user_value(user_score, review, confidence):
+    return user_score * review * confidence
 
 ## Operate a voting simulation taking into account matching and adequacy of each place.
 def vote_for_places(users_visits, places, scores, target_category, target_time, target_lon, target_lat):
     tally = {}
     for score, user in scores:
-        pass
+        for place_id, (time, spread, rating, confidence_level) in enumerate(users_visits[user]):
+            category, lon, lat = places[place_id]
+            if is_subcategory_of(category, target_category):
+                place_interest_time = get_time_value(time, spread, target_time)
+                place_interest_distance = get_distance_value(lon, lat, target_lon, target_lat)
+                place_interest_user = get_user_value(score, rating, confidence_level)
+
+                vote_value = place_interest_distance*place_interest_time*place_interest_user
+                if place_id in tally:
+                    tally[place_id] += vote_value
+                else:
+                    tally[place_id] = vote_value
     return tally
 
 ## Recommendation algorithm.
 def recommend_me_something_please(users, users_visits, places, target_user, target_category, target_time, target_lon, target_lat):
-    interesting_users = filter_by_location(users_visits, places, target_category, target_lon, target_lat)
-    scores_by_categories = match_by_category(users, places, interesting_users, target_user, target_category)
-
+    interesting_users       = filter_by_location(users_visits, places, target_category, target_lon, target_lat)
+    scores_by_categories    = match_by_category(users, places, interesting_users, target_user, target_category)
+    votes = vote_for_places(users_visits, places, scores_by_categories, target_category, target_time, target_lon, target_lat)
+    place_id, value = zip(*votes.items())
+    places_sorted = sorted(zip(value, place_id), reverse=True)
+    result = []
+    for _, place_id in places_sorted:
+        if not(place_id in users_visits[target_user]):
+            result.append(place_id)
+    return result
