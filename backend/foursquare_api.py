@@ -9,7 +9,7 @@ categories_list_url = 'https://api.foursquare.com/v2/venues/categories'
 venue_from_coordinates_url = 'https://api.foursquare.com/v2/venues/search'
 
 
-categories_json_file = open("backend/categories.json")
+categories_json_file = open("backend/data/categories.json")
 categories_json = categories_json_file.read()
 categories = json.loads(categories_json)
 
