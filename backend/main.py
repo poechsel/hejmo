@@ -42,7 +42,7 @@ Returns recommendations for an user.
 """
 @app.route('/get_recommendations/<int:user_id>/<int:category>/<float:location_x>/<float:location_y>/<int:time>/')
 def get_recommendations(user_id, category, location_x, location_y, time):
-
+    
 
 """
 Register a location with a rating, time of visit and an optional POST comment.
