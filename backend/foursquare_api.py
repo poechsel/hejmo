@@ -17,13 +17,29 @@ import copy
 
 category_map = {}
 
-def build_categorie_map(categories, parents=[]):
+category_to_children = {}
+category_to_parent = {}
+
+def build_categorie_map(categories, parents=[], parent_id=""):
+    category_to_children[parent_id] = []
     for category in categories:
         current = copy.deepcopy(category)
         current["categories"] = []
         path = parents + [current]
         category_map[category["id"]] = path
-        build_categorie_map(category["categories"], path)
+        build_categorie_map(category["categories"], path, current["id"])
+        category_to_parent[category["id"]] = parent_id
+        category_to_children[parent_id].append(category["id"])
+
+def is_subcategory_of(request, parent):
+    if request in category_to_parent:
+        if category_to_parent[request] == parent:
+            return True
+        return is_subcategory_of(category_to_parent[request], parent)
+    return False
+
+def get_subcategories_of(category):
+    return category_to_children.get(category, [])
 
 build_categorie_map(categories["categories"])
 

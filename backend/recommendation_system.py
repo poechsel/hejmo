@@ -3,6 +3,8 @@
 import numpy as np
 import utils
 
+import foursquare_api
+
 ## User data structure
 # users[id][category_id] = [rating, confidence_level]
 
@@ -15,11 +17,11 @@ import utils
 
 # check if request is a subcategory of parent.
 def is_subcategory_of(request, parent):
-    return True
+    return foursquare_api.is_subcategory_of(request, parent)
 
 # get subcategories of 
 def get_subcategories_of(category):
-    return []
+    return foursquare_api.get_subcategories_of(category)
 
 ## Update rating and confidence for a flat measure (value between zero and one)
 def update_rating_flat(current_rating, current_confidence_level, rating):
