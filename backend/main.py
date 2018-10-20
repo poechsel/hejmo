@@ -3,7 +3,11 @@ import json
 import recommandation_systems
 app = Flask(__name__)
 import json
-import database
+import database as db
+
+
+
+locations_to_rate = {}
 
 @app.route('/')
 def hello_world():
