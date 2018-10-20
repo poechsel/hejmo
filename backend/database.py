@@ -35,17 +35,17 @@ def get_userlist():
 # dict user -> user_profile
 def get_profiles():
     users = get_userlist()
-    result = []
+    result = {}
     for user in users:
-        result.append(get_user_profile(user))
+        result[user] = get_user_profile(user)
     return result
 
 # dict user -> user_ratings
 def get_ratings():
     users = get_userlist()
-    result = []
+    result = {}
     for user in users:
-        result.append(get_user_ratings(user))
+        result[user] = get_user_ratings(user)
     return result
 
 # list of [place_id, name, photo, description, longitude, latitude, [categories]]

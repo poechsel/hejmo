@@ -1,3 +1,3 @@
-[
-    ["place_id", "rating", "confidence", ["visite 1", "visite 2"]]
-]
+{
+    "place_0": {"rating": 1.0, "confidence": 0.5, "categories": ["cat_1", "cat_2"]}
+}
