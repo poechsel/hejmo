@@ -1,0 +1,130 @@
+Théâtre de la Renaissance, théâtre, aime pas, 48.869062,2.356312
+Le Bon Marché, magasin, aime, 48.851187,2.324313
+Les enfants perdus, restaurant, aime, 48.874312,2.361937
+Le Mabillon, aime, café, 48.853313,2.335813
+Ladurée Paris Royale, aime, magasin, 48.868438,2.323688
+Carla Morri, coiffeur, aime pas, 48.865062,2.291062
+Hammam Medina Center, sport, aime, 48.885312,2.384438
+Grom, café, aime, 48.856687,2.357062
+Angelina, café, aime pas, 48.865062,2.328438
+
+Galeries Lafayette, magasin, aime pas, 48.873563,2.332188
+BHV Marais, magasin, aime, 48.857312,2.353687
+Ladurée Paris Royale, magasin, aime, 48.868438,2.323688
+Fnac, magasin, aime pas, 48.875437,2.327063
+Théâtre Mogador, théâtre, aime, 48.875437,2.331188
+Le Mabillon, café, aime, 48.853313,2.335813
+Musée Jacquemart André, musée, aime pas, 48.875437,2.310437
+Espace beauté, sport, aime pas, 48.851137,2.344922
+HealthCity, sport, aime, 48.850787,2.345109
+Hammam Medina Center, sport, aime, 48.885312,2.384438
+
+Le Bon Marché, magasin, aime, 48.851187,2.324313
+Le Mabillon, café, aime, 48.853313,2.335813
+As du falafel, restaurant, aime, 48.857437,2.359187
+Le Bon Marché, magasin, aime, 48.851187,2.324313 
+Jimmy Choo, magasin, aime, 48.873937,2.328688
+HealthCity, sport, aime, 48.850787,2.345109
+Grom, café, aime, 48.856687,2.357062
+Le bar à huitres de Saint Germain, café, aime pas, 48.851062,2.345859
+Carla Morri, coiffeur, aime pas, 48.865062,2.291062
+Galeries Lafayette, magasin, aime pas, 48.873563,2.332188
+
+Musée du Louvre, musée, aime, 48.860562,2.337688
+La comédie Française, théâtre, aime, 48.863562,2.335938
+Le théâtre du Palais royal, théâtre, aime, 48.866062,2.337563
+Sainte Chapelle, musée, aime pas, 48.855437,2.344938
+Luminor Hôtel de Ville, cinéma, aime, 48.859187,2.352687
+Galérie Robert Stadler, musée, aime, 48.858187,2.352437
+Le BHV Marais, magasin, aime, 48.857312,2.353437
+Musée Orsay, musée, aime pas, 48.856562,2.352187
+Grom, café, aime, 48.856687,2.357062
+Le Centre Pompidou, musée, aime, 48.860687,2.352187
+
+Au réparateur des bicyclettes, magasin, aime, 48.862687,2.350813
+MK2, cinéma, aime, 48.861562,2.352187 
+Musée du Louvre, musée, aime, 48.860562,2.337688
+La comédie Française, théâtre, aime, 48.863562,2.335938
+Luminor Hôtel de Ville, cinéma, aime, 48.859187,2.352687
+Cinémathèque française, cinéma, aime, 48.837188,2.382562
+Le chinois de Bercy, restaurant, aime pas, 48.837688,2.382812
+Gilbert Jeune, magasin, aime, 48.853437,2.344938
+Galerie Robert Stadler, musée, aime, 48.858187,2.352437 
+Le Centre Pompidou, musée, aime, 48.860687,2.352187
+
+Gilbert Jeune, magasin, aime, 48.853437,2.344938
+Luminor Hôtel de Ville, cinéma, aime, 48.859187,2.352687
+Cinémathèque française, cinéma, aime, 48.837188,2.382562
+La comédie Française, théâtre, aime, 48.863562,2.335938
+Le théâtre du Palais royal, théâtre, aime, 48.866062,2.337563
+Piscine Saint Merri, sport, aime, 48.859187,2.352687
+Musée Carnavalet, musée, aime pas, 48.857312,2.362562
+L’Escale du Liban, magasin, aime, 48.856062,2.359062
+Bibliothèque Arthur Rimbaud, bibliothèque, aime pas,48.855937,2.356312
+Bibliothèque Sinte Geneviève, bibliothèque, aime, 48.847188,2.345938
+
+Dernier Pub avant la fin du monde, aime, bar, 48.857937,2.346312
+HD Dinner, restaurant, aime pas, 48.860062,2.348563
+Piscine Saint Merri, sport, aime, 48.859187,2.352687
+Claudie Pierlot, magasin, aime pas, 48.857187,2.353687
+Grom, café, aime, 48.856687,2.357062
+Gilbert Jeune, magasin, aime, 48.853437,2.344938
+Institut de France, bibliothèque, aime pas, 48.857187,2.336938
+Zinc Bar, bar, aime, 48.856562,2.336687
+Cinéma du Panthéon, cinéma, aime, 48.847437,2.342313
+MK2, cinema, aime, 48.861562,2.352187 
+
+Gilbert Jeune, magasin, aime, 48.853437,2.344938
+Le Champo espace Tati, cinéma, aime, 48.849938,2.343188
+Luminor Hôtel de Ville, cinéma, aime, 48.859187,2.352687
+Cinémathèque française, cinéma, aime, 48.837188,2.382562
+Cinéma du Panthéon, cinéma, aime, 48.847437,2.342313
+MK2, cinéma, aime pas, 48.861562,2.352187 
+McDonald’s, restaurant, aime, 48.847063,2.341063
+Kilo Shop, magasin, aime pas, 48.852812,2.336562
+Ecole nationale des Beaux arts, musée, aime, 48.856812,2.333813
+Higuma, restaurant, aime, 48.866562,2.335813
+
+McDonald’s, restaurant, aime, 48.847063,2.341063
+Dernier Pub avant la fin du monde, bar, aime, 48.857937,2.346312
+HD Dinner, restaurant, aime pas, 48.860062,2.348563
+Higuma, restaurant, aime, 48.866562,2.335813
+UGC, cinéma, aime, 48.843563,2.325813
+Starbucks, café, aime pas, 48.843313,2.324688
+Zinc Bar, bar, aime, 48.856562,2.336687
+Destination Danger, escape game, aime, 48.847437,2.378812
+Nuba Paris, bar, aime, 48.841188,2.369563
+Art Ludique, musée, aime pas, 48.839938,2.371313
+
+Zinc Bar, bar, aime, 48.856562,2.336687
+Nuba Paris, bar, aime, 48.841188,2.369563
+HealthCity, sport, aime, 48.850787,2.345109
+Raspoutine Paris, bar, aime pas, 48.871437,2.300313
+Spa Diane Barrière, sport, aime, 48.871063,2.301313
+Les Dancing de Paris, bar, aime pas, 48.870938,2.302563 
+Cartier, magasin, aime, 48.869563,2.302063
+Prêt à manger, restaurant, aime, 48.868563,2.303188
+Salad’bar, restaurant, aime, 48.872937,2.325188
+As du falafel, restaurant, aime, 48.857437,2.359187
+
+HealthCity, sport, aime, 48.850787,2.345109
+Raspoutine Paris, bar, aime, 48.871437,2.300313
+Spa Diane Barrière, sport, aime pas, 48.871063,2.301313
+Cercle de la forme, sport, aime, 48.840063,2.329938
+Théâtre de Poche, théâtre, aime, 48.840813,2.324313
+Prêt à manger, restaurant, aime, 48.868563,2.303188
+Salad’bar, restaurant, aime, 48.872937,2.325188
+HD Dinner, restaurant, aime pas, 48.860062,2.348563
+Higuma, restaurant, aime, 48.866562,2.335813
+Breakfast in America, restaurant, aime, 48.847813,2.351062
+
+Zinc Bar, bar, aime, 48.856562,2.336687
+Nuba Paris, bar, aime, 48.841188,2.369563
+Raspoutine Paris, bar, aime, 48.871437,2.300313
+Spa Diane Barrière, sport, aime, 48.871063,2.301313
+Higuma, restaurant, aime, 48.866562,2.335813
+Spa Diane Barrière, sport, aime, 48.871063,2.301313
+Kebab, restaurant, aime, 48.847437,2.352312
+La Petite, bar, aime, 48.844312,2.349688
+Le Bar de fer, bar, aime pas,  48.842937,2.348938
+The New Margen’s Pub, bar, aime, 48.842438,2.349813
