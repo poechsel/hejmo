@@ -4,12 +4,14 @@ import json
 import database as db
 
 
-
+user_ratings = {}
+user_profils = {}
 locations_to_rate = {}
+venues = {}
+ratings = db.get_ratings()
+profiles = db.get_profiles()
+userlist = db.get_userlist()
 
-@app.route('/')
-def hello_world():
-    return ''
 
 '''
 Get vector profile of an user.
@@ -17,9 +19,9 @@ Get vector profile of an user.
     feature_vector: array[float];
 }
 '''
-@app.route('/get_profile/<int:user_id>')
+@app.route('/profile/<int:user_id>', methods=['GET'])
 def get_profile(user_id):
-    pass
+    return json.dumps(db.get_user_profile(user_id))
 
 
 
@@ -34,9 +36,9 @@ Returns
     Location
 }
 '''
-@app.route('/get_locations_to_rate/<int:user_id>')
+@app.route('/locations_to_rate/<int:user_id>', methods=['GET'])
 def get_locations_to_rate(user_id):
-    user_data = database.get_user_locations_to_rate(user_id)
+    user_data = db.get_locations_to_rate(user_id)
     output = []
     for entry in user_data:
         output.append({
@@ -60,9 +62,9 @@ Get rated locations of an user.
     time_of_visit_spread: float;
 }
 '''
-@app.route('/get_locations/<int:user_id>')
+@app.route('/locations/<int:user_id>', methods=['GET'])
 def get_locations(user_id):
-    pass
+    return db.get_user_ratings(user_id)
 
 
 '''
@@ -78,8 +80,10 @@ Returns recommendations for an user.
     }]
 }
 '''
-@app.route('/get_recommendations/<int:user_id>/<int:category>/<float:location_x>/<float:location_y>/<int:time>/')
-def get_recommendations(user_id, category, location_x, location_y, time):
+@app.route('/recommendations/<int:user_id>/<int:category>/<float:lng>/<float:lat>/<int:time>/', methods=['GET'])
+def get_recommendations(user_id, category, lng, lat, time):
+    recommend_me_something_please(profiles, visits, venues,
+                                  user_id, category, time, lng, lat)
     pass
 
 '''
