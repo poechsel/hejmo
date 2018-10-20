@@ -108,11 +108,37 @@ Register a location with a rating, time of visit and an optional POST comment.
 '''
 @app.route('/put_location/<int:user_id>/<int:place_id>/<float:rating>/<int:time_of_visit>/')
 def put_location(user_id, place_id, rating, time_of_visit):
-    pass
+    one_day = 24*3600
+    time_of_visit = time_of_visit % one_day
+
+    # Update user ratings
+    user_ratings = db.get_user_ratings(user_id)
+    if place_id in user_ratings:
+        user_ratings[place_id]["rating"], user_ratings[place_id]["confidence"] = recommendation_system.update_rating_flat(
+            user_ratings[place_id]["rating"], user_ratings[place_id]["confidence"], rating)
+        user_ratings[place_id]["visits"].append(time_of_visit)
+    else:
+        user_ratings[place_id]["rating"] = rating
+        user_ratings[place_id]["confidence"] = 1.0
+        user_ratings[place_id]["visits"] = [time_of_visit]
+    
+    user_profile = db.get_user_profile(user_id)
+    place_categories = db.get_venue_data(place_id)["categories"]
+    for category in place_categories:
+        user_profile[category]["rating"], user_profile[category]["confidence"] = (
+            recommendation_system.update_rating_flat(
+                user_profile[category]["rating"], user_profile[category]["confidence"], rating)
+        )
+    return "OK"
 
 '''
 Set category affinity.
 '''
 @app.route('/put_affinity/<int:user_id>/<int:category>/<float:affinity>/')
 def put_affinity(user_id, category, affinity):
-    pass
+    user_profile = db.get_user_profile(user_id)
+    user_profile[category]["rating"], user_profile[category]["confidence"] = (
+        recommendation_system.update_rating_flat(
+            user_profile[category]["rating"], user_profile[category]["confidence"], affinity)
+    )
+    return "OK"
