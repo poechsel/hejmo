@@ -1,6 +1,4 @@
 from flask import Flask
-import json
-import recommandation_systems
 app = Flask(__name__)
 import json
 import database as db
@@ -19,7 +17,7 @@ Get vector profile of an user.
     feature_vector: array[float];
 }
 '''
-@app.route('/profile/<int:user_id>', methods=['GET'])
+@app.route('/get_profile/<int:user_id>')
 def get_profile(user_id):
     pass
 
@@ -36,16 +34,16 @@ Returns
     Location
 }
 '''
-@app.route('/locations_to_rate/<int:user_id>', methods=["GET"])
+@app.route('/get_locations_to_rate/<int:user_id>')
 def get_locations_to_rate(user_id):
-    user_data = database.get_locations_to_rate(user_id)
+    user_data = database.get_user_locations_to_rate(user_id)
     output = []
     for entry in user_data:
         output.append({
             "place_id": entry[0],
             "name": entry[1],
             "date_of_visit": entry[2],
-            "photo_url": entry[3],
+            "photo_ur": entry[3],
             "description": entry[4],
             "location": entry[5]
         })
@@ -62,7 +60,7 @@ Get rated locations of an user.
     time_of_visit_spread: float;
 }
 '''
-@app.route('/locations/<int:user_id>', methods=['GET'])
+@app.route('/get_locations/<int:user_id>')
 def get_locations(user_id):
     pass
 
@@ -80,21 +78,20 @@ Returns recommendations for an user.
     }]
 }
 '''
-@app.route('/recommendations/<int:user_id>/<int:category>/<float:lat>/<float:lng>/<int:time>/', methods=['GET'])
-def get_recommendations(user_id, category, lat, lng, time):
-    recommandations = recommendation_systems.recommand_me_something(users, users_visits, places, user_id, category, time, lat, lng)
-    return json.dumps(recommandations)
-    
+@app.route('/get_recommendations/<int:user_id>/<int:category>/<float:location_x>/<float:location_y>/<int:time>/')
+def get_recommendations(user_id, category, location_x, location_y, time):
+    pass
+
 '''
 Register a location with a rating, time of visit and an optional POST comment.
 '''
-@app.route('/location/<int:user_id>/<int:place_id>/<float:rating>/<int:time_of_visit>/', methods=['PUT'])
+@app.route('/put_location/<int:user_id>/<int:place_id>/<float:rating>/<int:time_of_visit>/')
 def put_location(user_id, place_id, rating, time_of_visit):
     pass
 
 '''
 Set category affinity.
 '''
-@app.route('/affinity/<int:user_id>/<int:category>/<float:affinity>/', methods=['PUT'])
+@app.route('/put_affinity/<int:user_id>/<int:category>/<float:affinity>/')
 def put_affinity(user_id, category, affinity):
-    
+    pass

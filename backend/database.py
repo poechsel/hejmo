@@ -15,15 +15,18 @@ venue_data_file = "info.json"
 
 # list of [place_id, name, date_of_visit, photo_url, description, location]
 def get_user_locations_to_rate(user_id):
-    return genfromtxt("data/"+str(user_id)+"/"+locations_to_rate_file, delimiter=',')
+    with open("data/"+str(user_id)+"/"+locations_to_rate_file) as file:
+        return json.load(file)
 
 # list of [category_id, rating, confidence]
 def get_user_profile(user_id):
-    return genfromtxt("data/"+str(user_id)+"/"+profile_file, delimiter=',')
+    with open("data/"+str(user_id)+"/"+profile_file) as file:
+        return json.load(file)
 
 # list of [place_id, rating, confidence, tov => [time_of_visits]]
 def get_user_ratings(user_id):
-    return genfromtxt("data/"+str(user_id)+"/"+ratings_file, delimiter=',')
+    with open("data/"+str(user_id)+"/"+ratings_file) as file:
+        return json.load(file)
 
 def get_userlist():
     with open(userlist_file) as file:

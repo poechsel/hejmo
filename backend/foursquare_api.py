@@ -58,7 +58,7 @@ def get_venue_ID(latitude, longitude):
         llAcc='100'
     )
 
-    venues = client.venues.search(params)
+    venues = client.Venues.search(client, params)
 
     min_venue = min(venues["venues"], key = lambda venue : venue.get("distance", float("+inf")))
 
@@ -73,7 +73,7 @@ def get_venue_ID(latitude, longitude):
     return min_venue
 
 def get_venue_details(venue_ID):
-    return client.venues(venue_ID)
+    return client.Venues(venue_ID)
 
 
 def get_venue_category(venue_ID):
