@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { withTheme, Button, Card, Title, Text, Paragraph } from 'react-native-paper';
 
 function PlaceCard(props) {
-  const { theme, src, ...rest } = props;
+  const { theme, place, ...rest } = props;
   const { roundness } = theme;
 
   const rounding = {
@@ -15,20 +15,18 @@ function PlaceCard(props) {
 
   return (
     <Card style={styles.card}>
-      <Image source={{ uri: src }} style={[styles.image, rounding]} />
+      <Image source={{ uri: place.photo_url }} style={[styles.image, rounding]} />
       <Card.Content>
-        <Title style={styles.title}>Restaurant Higuma</Title>
+        <Title style={styles.title}>{ place.name }</Title>
         <View style={styles.status}>
           <Icon style={styles.icons} name="place" size={20} />
-          <Text>Card content</Text>
+          <Text>{place.location}</Text>
         </View>
         <View style={styles.status}>
           <Icon style={styles.icons} name="access-time" size={20} />
-          <Text>Card content</Text>
+          <Text>{place.date_of_visit}</Text>
         </View>
-        <Paragraph style={styles.description}>
-          uisdfysidfu
-        </Paragraph>
+        <Paragraph style={styles.description}>{place.description}</Paragraph>
       </Card.Content>
     </Card>
   );

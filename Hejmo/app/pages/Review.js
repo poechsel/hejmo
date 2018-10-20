@@ -5,54 +5,99 @@ import CardStack, { Card } from 'react-native-card-stack-swiper';
 import PlaceCard from '../components/PlaceCard';
 import Icon from 'react-native-vector-icons/AntDesign';
 
+// Mock data (the API calls will come later).
+import mockReviews from '../mock/reviews.json';
+
 export default class Review extends Component<{}> {
   constructor(props) {
     super(props);
-    this.state = {backgroundColor: 'white'};
+    this.state = { empty: false };
+    this.places = mockReviews;
   }
 
-  render() {
-    return (
-      <View style={{flex: 1, paddingVertical: 20}}>
-        <CardStack
-            style={styles.content}
-            renderNoMoreCards={() => <Text style={{fontWeight:'700', fontSize:18, color:'gray'}}>No more cards :(</Text>}
-            ref={swiper => { this.swiper = swiper }}>
-          <Card><PlaceCard src="https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg"></PlaceCard></Card>
-          <Card><PlaceCard src="https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg"></PlaceCard></Card>
-          <Card><PlaceCard src="https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg"></PlaceCard></Card>
-          <Card><PlaceCard src="https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg"></PlaceCard></Card>
-          <Card><PlaceCard src="https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg"></PlaceCard></Card>
-        </CardStack>
+  removePlace = () => {
+    this.places.splice(0, 1)
+    if (this.places.length == 0) {
+      this.setState({ empty: true });
+    }
+  }
 
-        <View style={styles.footer}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.largeButton, styles.dislikeButton]} onPress={()=>{
-              this.swiper.swipeLeft();
-            }}>
-              <Icon name="dislike1" size={32} color={DISLIKE_COLOR} />
-            </TouchableOpacity>
-            <View style={styles.centerButtonContainer}>
-              <TouchableOpacity style={[styles.button, styles.smallButton, styles.commentButton]} onPress={() => {
-                this.swiper.swipeTop();
-              }}>
-                <Icon name="edit" size={25} color={COMMENT_COLOR} />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.smallButton, styles.discardButton]} onPress={() => {
-                this.swiper.swipeBottom();
-              }}>
-                <Icon name="close" size={25} color={DISCARD_COLOR} />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={[styles.button, styles.largeButton, styles.likeButton]} onPress={()=>{
-              this.swiper.swipeRight();
-            }}>
-              <Icon name="like1" size={32} color={LIKE_COLOR} />
-            </TouchableOpacity>
-          </View>
+  handleLeft = () => {
+    // TODO(liautaud): API calls.
+    this.removePlace()
+  }
+
+  handleRight = () => {
+    // TODO(liautaud): API calls.
+    this.removePlace()
+  }
+
+  handleTop = () => {
+    // TODO(liautaud): API calls.
+    // this.removePlace()
+  }
+
+  handleBottom = () => {
+    // TODO(liautaud): API calls.
+    this.removePlace()
+  }
+
+  renderFooter = () => (
+    <View style={styles.footer}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.largeButton, styles.dislikeButton]}
+          onPress={() => { this.swiper.swipeLeft(); }}>
+            <Icon name="dislike1" size={32} color={DISLIKE_COLOR} />
+        </TouchableOpacity>
+        <View style={styles.centerButtonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.smallButton, styles.commentButton]} 
+            onPress={() => { this.swiper.swipeTop(); }}>
+              <Icon name="edit" size={25} color={COMMENT_COLOR} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.smallButton, styles.discardButton]}
+            onPress={() => { this.swiper.swipeBottom(); }}>
+              <Icon name="close" size={25} color={DISCARD_COLOR} />
+          </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={[styles.button, styles.largeButton, styles.likeButton]}
+          onPress={() => { this.swiper.swipeRight(); }}>
+            <Icon name="like1" size={32} color={LIKE_COLOR} />
+        </TouchableOpacity>
       </View>
+    </View>
+  )
+
+  render() {
+    let cards = this.places.map(place => 
+      <Card key={place.place_id}><PlaceCard place={place}></PlaceCard></Card>
     );
+
+    if (!this.state.empty && this.places.length > 0) {
+      return (
+        <View style={{flex: 1, paddingVertical: 20}}>
+          <CardStack
+            style={styles.content}
+            onSwipedLeft={this.handleLeft}
+            onSwipedRight={this.handleRight}
+            onSwipedTop={this.handleTop}
+            onSwipedBottom={this.handleBottom}
+            renderNoMoreCards={() => <Text></Text>}
+            ref={swiper => { this.swiper = swiper }}>{ cards }</CardStack>
+          {this.renderFooter()}
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.empty}>
+          <Icon size={80} name="star" color="#ddd"></Icon>
+          <Text style={{ marginTop: 30 }}>You have no more places to review.</Text>
+        </View>
+      );
+    }
   }
 }
 
@@ -67,6 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   label: {
     lineHeight: 400,
     textAlign: 'center',
@@ -81,7 +127,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 30,
+  },
+
+  empty: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
   /* Container styles */

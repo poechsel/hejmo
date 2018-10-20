@@ -1,0 +1,28 @@
+[
+  {
+    "place_id": 0,
+    "name": "Higuma Opéra 1",
+    "photo_url": "https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg",
+    "description": "Salut les amis",
+    "location": "10 rue Saint-Anne, 92002 Paris",
+    "date_of_visit": "Last monday at 9pm",
+  },
+
+  {
+    "place_id": 1,
+    "name": "Higuma Opéra 2",
+    "photo_url": "https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg",
+    "description": "Salut les amis",
+    "location": "10 rue Saint-Anne, 92002 Paris",
+    "date_of_visit": "Last monday at 9pm",
+  },
+
+  {
+    "place_id": 2,
+    "name": "Higuma Opéra 3",
+    "photo_url": "https://media-cdn.tripadvisor.com/media/photo-s/04/9e/83/1c/higuma.jpg",
+    "description": "Salut les amis",
+    "location": "10 rue Saint-Anne, 92002 Paris",
+    "date_of_visit": "Last monday at 9pm",
+  }
+]
