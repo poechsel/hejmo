@@ -35,6 +35,18 @@ def get_venue_category(venue_ID):
 #print(json.dumps(client.venues.categories()))
 categories_json_file = open("backend/categories.json")
 categories_json = categories_json_file.read()
-print(categories_json)
 categories = json.loads(categories_json)
-print(categories)
+
+import copy
+
+category_map = {}
+
+def build_categorie_map(categories, parents=[]):
+    for category in categories:
+        current = copy.deepcopy(category)
+        current["categories"] = []
+        path = parents + [current]
+        category_map[category["id"]] = path
+        build_categorie_map(category["categories"], path)
+
+build_categorie_map(categories["categories"])
