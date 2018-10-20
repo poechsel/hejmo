@@ -70,8 +70,8 @@ def filter_by_location(users_visits, places, requested_category, lon, lat, max_d
     for uid, visits in enumerate(users_visits):
         n_potential = 0
         for place_id, (_, _, rating, confidence_level) in enumerate(visits):
-            categories, lon2, lat2 = places[place_id]
-            if utils.gps_distance(lon, lat, lon2, lat2) < max_distance and is_subcategory_of(categories, requested_category):
+            categories, lon2, lat2 = places[place_id]["categories"], places[place_id]["longitude"], places[place_id]["latitude"]
+            if utils.gps_distance(lon, lat, lon2, lat2) < max_distance and has_subcategory_of(categories, requested_category):
                 if rating*confidence_level >= 0.5:
                     n_potential += 1
         if n_potential > 0:
@@ -81,12 +81,11 @@ def filter_by_location(users_visits, places, requested_category, lon, lat, max_d
 
 ## Input:
 # users: user category profile
-# places: places database
 # user_list: users to consider
 # target_category: match within specified subcategory
 ## Output:
 # [(score, user_id)] by descending order.
-def match_by_category(users_profiles, places, user_list, target_user, target_category):
+def match_by_category(users_profiles, user_list, target_user, target_category):
     scores = []
     selected_categories = get_subcategories_of(target_category)
     for user in user_list:
@@ -143,7 +142,7 @@ def vote_for_places(users_ratings, places, scores, target_category, target_time,
 ## Recommendation algorithm.
 def recommend_me_something_please(users_profiles, users_ratings, places, target_user, target_category, target_time, target_lon, target_lat):
     interesting_users       = filter_by_location(users_ratings, places, target_category, target_lon, target_lat)
-    scores_by_categories    = match_by_category(users_profiles, places, interesting_users, target_user, target_category)
+    scores_by_categories    = match_by_category(users_profiles, interesting_users, target_user, target_category)
     votes = vote_for_places(users_ratings, places, scores_by_categories, target_category, target_time, target_lon, target_lat)
     place_id, value = zip(*votes.items())
     places_sorted = sorted(zip(value, place_id), reverse=True)

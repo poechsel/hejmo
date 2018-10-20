@@ -2,7 +2,7 @@ from flask import Flask
 app = Flask(__name__)
 import json
 import database as db
-
+import recommendation_system
 
 user_ratings = {}
 user_profils = {}
@@ -16,7 +16,10 @@ userlist = db.get_userlist()
 '''
 Get vector profile of an user.
 {
-    feature_vector: array[float];
+    cat_N: {
+        rating: float;
+        confidence: float;
+    }
 }
 '''
 @app.route('/profile/<int:user_id>', methods=['GET'])
@@ -29,6 +32,7 @@ def get_profile(user_id):
 Get a list of locations for the user to rate.
 Returns
 {
+    Place_id
     Name
     Date of visit
     Photo
@@ -38,7 +42,7 @@ Returns
 '''
 @app.route('/locations_to_rate/<int:user_id>', methods=['GET'])
 def get_locations_to_rate(user_id):
-    user_data = db.get_locations_to_rate(user_id)
+    user_data = db.get_user_locations_to_rate(user_id)
     output = []
     for entry in user_data:
         output.append({
@@ -55,11 +59,11 @@ def get_locations_to_rate(user_id):
 '''
 Get rated locations of an user.
 {
-    place_id: int;
-    rating: float;
-    confidence_level: float;
-    time_of_visit_mean: int;
-    time_of_visit_spread: float;
+    place_id: {
+        rating: float;
+        confidence_level: float;
+        visits: [float];
+    }
 }
 '''
 @app.route('/locations/<int:user_id>', methods=['GET'])
@@ -82,9 +86,22 @@ Returns recommendations for an user.
 '''
 @app.route('/recommendations/<int:user_id>/<int:category>/<float:lng>/<float:lat>/<int:time>/', methods=['GET'])
 def get_recommendations(user_id, category, lng, lat, time):
-    recommend_me_something_please(profiles, visits, venues,
-                                  user_id, category, time, lng, lat)
-    pass
+    users_profiles = db.get_profiles()
+    users_rating = db.get_ratings()
+    places = db.get_venues_data()
+    results = recommendation_system.recommend_me_something_please(
+        users_profiles, users_rating, places, user_id, category, time, lng, lat)
+    
+    output = []
+    for res in results[:10]:
+        output.append({
+            "place_id": res,
+            "matching_info": {
+                "matched_people_score": 0
+            },
+            "tip": ""
+        })
+    return json.dumps({"recommendations": output})
 
 '''
 Register a location with a rating, time of visit and an optional POST comment.

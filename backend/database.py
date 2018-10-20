@@ -9,6 +9,7 @@ profile_file = "profile.csv"
 ratings_file = "ratings.csv"
 
 userlist_file = "data/users/userlist.json"
+venuelist_file = "data/venues/venuelist.json"
 
 venue_data_file = "info.json"
 
@@ -46,6 +47,17 @@ def get_ratings():
     result = {}
     for user in users:
         result[user] = get_user_ratings(user)
+    return result
+
+def get_venuelist():
+    with open(venuelist_file) as file:
+        return json.load(file)
+
+def get_venues_data():
+    venues = get_venuelist()
+    result = {}
+    for venue in venues:
+        result[venue] = get_venue_data(venue)
     return result
 
 # list of [place_id, name, photo, description, longitude, latitude, [categories]]
