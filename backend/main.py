@@ -205,6 +205,15 @@ def put_location(user_id, place_id, rating, time_of_visit):
     
     user_profile = db.get_user_profile(user_id)
     place_categories = db.get_venue_data(place_id)["categories"]
+    res = []
+    for cat in place_categories:
+        res.append(cat)
+        while cat in foursquare_api.category_to_parent:
+            cat = foursquare_api.category_to_parent[cat]
+            if cat != "":
+                res.append(cat)
+
+    place_categories = list(set(res))
     for category in place_categories:
         user_profile[category]["rating"], user_profile[category]["confidence"] = (
             recommendation_system.update_rating_flat(
