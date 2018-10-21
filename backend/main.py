@@ -60,7 +60,7 @@ Get rated locations of an user.
 '''
 @app.route('/locations/<int:user_id>', methods=['GET'])
 def get_locations(user_id):
-    return db.get_user_ratings(user_id)
+    return json.dumps(db.get_user_ratings(user_id))
 
 
 '''
@@ -76,7 +76,7 @@ Returns recommendations for an user.
     }]
 }
 '''
-@app.route('/recommendations/<int:user_id>/<int:category>/<float:lng>/<float:lat>/<int:time>/', methods=['GET'])
+@app.route('/recommendations/<int:user_id>/<category>/<float:lng>/<float:lat>/<int:time>', methods=['GET'])
 def get_recommendations(user_id, category, lng, lat, time):
     users_profiles = db.get_profiles()
     users_rating = db.get_ratings()
@@ -87,9 +87,9 @@ def get_recommendations(user_id, category, lng, lat, time):
     output = []
     for res in results[:10]:
         output.append({
-            "place_id": res,
+            "place_id": res["PID"],
             "matching_info": {
-                "matched_people_score": 0
+                "matched_people_score": res["score"]
             },
             "tip": ""
         })

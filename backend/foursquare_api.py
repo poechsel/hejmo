@@ -3,8 +3,10 @@
 
 import foursquare
 import json
-import auth.foursquare_secret as secret
+import sys
 import os
+sys.path.append(os.path.dirname(__file__))
+import auth.foursquare_secret as secret
 
 categories_list_url = 'https://api.foursquare.com/v2/venues/categories'
 venue_from_coordinates_url = 'https://api.foursquare.com/v2/venues/search'
