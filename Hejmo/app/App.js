@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { BottomNavigation, Text } from 'react-native-paper';
+import { BottomNavigation, Text, Appbar } from 'react-native-paper';
 
 /* Theming */
 const theme = {
@@ -15,19 +15,19 @@ const theme = {
 
 /* Routing */
 import HomePage from './pages/Home';
-import ReviewPage from './pages/Review';
+import ReviewsPage from './pages/Reviews';
 import ProfilePage from './pages/Profile';
 
 const HomeRoute = () => <HomePage></HomePage>;
-const ReviewRoute = () => <ReviewPage></ReviewPage>;
+const ReviewsRoute = () => <ReviewsPage></ReviewsPage>;
 const ProfileRoute = () => <ProfilePage></ProfilePage>;
 
 export default class App extends Component<{}> {
   state = {
-    index: 1,
+    index: 0,
     routes: [
       { key: 'home', title: 'Home', icon: 'home' },
-      { key: 'review', title: 'Review', icon: 'star' },
+      { key: 'reviews', title: 'Reviews', icon: 'star' },
       { key: 'profile', title: 'Profile', icon: 'person' },
     ],
   };
@@ -36,13 +36,17 @@ export default class App extends Component<{}> {
 
   renderScene = BottomNavigation.SceneMap({
     home: HomeRoute,
-    review: ReviewRoute,
+    reviews: ReviewsRoute,
     profile: ProfileRoute,
   });
 
   render() {
     return (
       <PaperProvider theme={theme}>
+        <Appbar.Header>
+          <Appbar.Content title={this.state.routes[this.state.index].title} />
+          <Appbar.Action icon="more-vert" />
+        </Appbar.Header>
         <BottomNavigation
           navigationState={this.state}
           onIndexChange={this.handleIndexChange}

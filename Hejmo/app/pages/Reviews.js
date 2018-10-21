@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { Dialog, Paragraph, Button, Portal, Text } from 'react-native-paper';
 import CardStack, { Card } from 'react-native-card-stack-swiper';
 
 import PlaceCard from '../components/PlaceCard';
@@ -8,10 +9,10 @@ import Icon from 'react-native-vector-icons/AntDesign';
 // Mock data (the API calls will come later).
 import mockReviews from '../mock/reviews.json';
 
-export default class Review extends Component<{}> {
+export default class Reviews extends Component<{}> {
   constructor(props) {
     super(props);
-    this.state = { empty: false };
+    this.state = { empty: false, editing: false };
     this.places = mockReviews;
   }
 
@@ -34,7 +35,7 @@ export default class Review extends Component<{}> {
 
   handleTop = () => {
     // TODO(liautaud): API calls.
-    // this.removePlace()
+    this.removePlace()
   }
 
   handleBottom = () => {
@@ -78,7 +79,7 @@ export default class Review extends Component<{}> {
 
     if (!this.state.empty && this.places.length > 0) {
       return (
-        <View style={{flex: 1, paddingVertical: 20}}>
+        <View style={{flex: 1}}>
           <CardStack
             style={styles.content}
             onSwipedLeft={this.handleLeft}
@@ -101,9 +102,9 @@ export default class Review extends Component<{}> {
   }
 }
 
-const LIKE_COLOR = '#00a86b';
-const DISLIKE_COLOR = '#fd267d';
-const COMMENT_COLOR = '#f6be42';
+const LIKE_COLOR = '#5add51';
+const DISLIKE_COLOR = '#fa6b83';
+const COMMENT_COLOR = '#ffb769';
 const DISCARD_COLOR = '#aaa';
 
 const styles = StyleSheet.create({
@@ -126,8 +127,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 30,
+    marginTop: 20,
+    marginBottom: 35,
   },
 
   empty: {
