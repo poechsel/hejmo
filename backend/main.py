@@ -3,7 +3,8 @@ app = Flask(__name__)
 import json
 import database as db
 import recommendation_system
-
+import foursquare_api
+import numpy as np
 
 '''
 Get vector profile of an user.
@@ -17,6 +18,33 @@ Get vector profile of an user.
 @app.route('/profile/<int:user_id>', methods=['GET'])
 def get_profile(user_id):
     return json.dumps(db.get_user_profile(user_id))
+
+'''
+Get profile summary of an user.
+{
+    cat_N: {
+        display_name: string;
+        icon_url: string;
+        interest: float;
+    }
+}
+'''
+@app.route('/profile_summary/<int:user_id>', methods=['GET'])
+def get_profile_summary(user_id):
+    user_profile = db.get_user_profile(user_id)
+    score_category = [(value["rating"]*value["confidence"], key) for key, value in user_profile.items()]
+    list.sort(score_category, reverse=True)
+    response_data = []
+    for score, category in score_category[:5]:
+        display_name = foursquare_api.get_category_display_name(category)
+        icon_url = foursquare_api.get_category_icon_url(category)
+        response_data.append({
+            "category_id": category,
+            "display_name": display_name,
+            "icon_url": icon_url,
+            "interest": score
+        })
+    return json.dumps(response_data)
 
 
 
@@ -35,16 +63,45 @@ Returns
 @app.route('/locations_to_rate/<int:user_id>', methods=['GET'])
 def get_locations_to_rate(user_id):
     user_data = db.get_user_locations_to_rate(user_id)
-    output = []
+    
+    user_profile = db.get_user_profile(user_id)
+    questions_to_ask, category_level = recommendation_system.find_questions_to_ask(user_profile)
+    
+    output_places = []
     for entry in user_data:
-        output.append({
+        output_places.append({
             "place_id": entry[0],
             "name": entry[1],
             "date_of_visit": entry[2],
-            "photo_ur": entry[3],
+            "photo_url": entry[3],
             "description": entry[4],
             "location": entry[5]
         })
+
+    output_categories = []
+    for category in questions_to_ask:
+        output_categories.append({
+            "place_id": "+"+category,
+            "name": foursquare_api.get_category_display_name(category) + " ?",
+            "date_of_visit": 0,
+            "photo_url": foursquare_api.get_category_icon_url(category),
+            "description": "Are you interested in this category ?",
+            "location": ""
+        })
+
+    if category_level == 1:
+        question_probability = 0.5
+    else:
+        question_probability = 0.25
+
+    output = []
+    for _ in range(30):
+        if np.random.random() < question_probability and len(output_categories) > 0:
+            output.append(output_categories[0])
+            output_categories = output_categories[1:]
+        elif len(output_places) > 0:
+            output.append(output_places[0])
+            output_places = output_places[1:]
     return json.dumps(output)
 
 
@@ -98,8 +155,11 @@ def get_recommendations(user_id, category, lng, lat, time):
 '''
 Register a location with a rating, time of visit and an optional POST comment.
 '''
-@app.route('/put_location/<int:user_id>/<int:place_id>/<float:rating>/<int:time_of_visit>/')
+@app.route('/put_location/<int:user_id>/<place_id>/<float:rating>/<int:time_of_visit>/')
 def put_location(user_id, place_id, rating, time_of_visit):
+    if place_id[0] == '+':
+        put_affinity(user_id, place_id[1:], rating)
+
     one_day = 24*3600
     time_of_visit = time_of_visit % one_day
 
@@ -126,10 +186,11 @@ def put_location(user_id, place_id, rating, time_of_visit):
     db.flush_user_profile(user_id, user_profile)
     return "OK"
 
+
 '''
 Set category affinity.
 '''
-@app.route('/put_affinity/<int:user_id>/<int:category>/<float:affinity>/')
+@app.route('/put_affinity/<int:user_id>/<category>/<float:affinity>/')
 def put_affinity(user_id, category, affinity):
     user_profile = db.get_user_profile(user_id)
     user_profile[category]["rating"], user_profile[category]["confidence"] = (

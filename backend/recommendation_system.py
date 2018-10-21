@@ -161,3 +161,22 @@ def recommend_me_something_please(users_profiles, users_ratings, places, target_
         if not(place_id in users_ratings[target_user]):
             result.append({"PID":place_id, "score": score})
     return result
+
+# Look for ambiguity and try to disambiguate
+def find_questions_to_ask(user_profile):
+    level_2 = []
+    categories_to_explore = []
+    for category in foursquare_api.categories["categories"]:
+        if user_profile[category["id"]]["confidence"] < 0.5:
+            categories_to_explore.append(category["id"])
+        level_2.extend([x["id"] for x in category["categories"]])
+
+    if len(categories_to_explore) > 0:
+        return categories_to_explore, 1
+    
+    for category in level_2:
+        if user_profile[category]["confidence"] < 0.5:
+            categories_to_explore.append(category)
+    return categories_to_explore, 2
+
+

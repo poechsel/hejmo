@@ -46,6 +46,11 @@ def get_subcategories_of(category):
 
 build_categorie_map(categories["categories"])
 
+def get_category_display_name(category):
+    return category_map[category][-1]["name"]
+
+def get_category_icon_url(category):
+    return category_map[category][-1]["icon"]["prefix"] + "88" + category_map[category][-1]["icon"]["suffix"]
 
 client = foursquare.Foursquare(
     client_id=secret.id,
