@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
+    "color-hash": "^1.0.3",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.1",
     "react-native-card-stack-swiper": "^1.0.9",
