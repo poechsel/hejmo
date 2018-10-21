@@ -81,12 +81,9 @@ def get_locations_to_rate(user_id):
     output_categories = []
     for category in questions_to_ask:
         output_categories.append({
-            "place_id": "+"+category,
-            "name": foursquare_api.get_category_display_name(category) + " ?",
-            "date_of_visit": 0,
-            "photo_url": foursquare_api.get_category_icon_url(category),
-            "description": "Are you interested in this category ?",
-            "location": ""
+            "place_id": category,
+            "name": foursquare_api.get_category_display_name(category),
+            "photo_url": foursquare_api.get_category_icon_url(category)
         })
 
     if category_level == 1:
@@ -97,10 +94,10 @@ def get_locations_to_rate(user_id):
     output = []
     for _ in range(30):
         if np.random.random() < question_probability and len(output_categories) > 0:
-            output.append(output_categories[0])
+            output.append({"question": output_categories[0]})
             output_categories = output_categories[1:]
         elif len(output_places) > 0:
-            output.append(output_places[0])
+            output.append({"place": output_places[0]})
             output_places = output_places[1:]
     return json.dumps(output)
 
@@ -157,9 +154,6 @@ Register a location with a rating, time of visit and an optional POST comment.
 '''
 @app.route('/put_location/<int:user_id>/<place_id>/<float:rating>/<int:time_of_visit>/')
 def put_location(user_id, place_id, rating, time_of_visit):
-    if place_id[0] == '+':
-        put_affinity(user_id, place_id[1:], rating)
-
     one_day = 24*3600
     time_of_visit = time_of_visit % one_day
 
