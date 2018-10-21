@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Dialog, Paragraph, Button, Portal, Text } from 'react-native-paper';
 import CardStack, { Card } from 'react-native-card-stack-swiper';
 
 import PlaceCard from '../components/PlaceCard';
+import QuestionCard from '../components/QuestionCard';
+import Config from '../config.json';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 // Mock data (the API calls will come later).
@@ -12,35 +14,43 @@ import mockReviews from '../mock/reviews.json';
 export default class Reviews extends Component<{}> {
   constructor(props) {
     super(props);
-    this.state = { empty: false, editing: false };
-    this.places = mockReviews;
+    this.state = { empty: false, loading: true };
+    this.locations = null;
+
+    fetch(Config.API_URL + '/locations_to_rate/' + Config.USER_ID)
+      .then(resp => resp.json())
+      .catch(error => { alert(error.message) })
+      .then(locations => {
+        this.locations = locations;
+        this.setState({loading: false});
+      })
   }
 
-  removePlace = () => {
-    this.places.splice(0, 1)
-    if (this.places.length == 0) {
+  removeLocation = () => {
+    this.locations.splice(0, 1)
+    if (this.locations.length == 0) {
       this.setState({ empty: true });
     }
   }
 
   handleLeft = () => {
     // TODO(liautaud): API calls.
-    this.removePlace()
+    this.removeLocation()
   }
 
   handleRight = () => {
     // TODO(liautaud): API calls.
-    this.removePlace()
+    this.removeLocation()
   }
 
   handleTop = () => {
     // TODO(liautaud): API calls.
-    this.removePlace()
+    this.removeLocation()
   }
 
   handleBottom = () => {
     // TODO(liautaud): API calls.
-    this.removePlace()
+    this.removeLocation()
   }
 
   renderFooter = () => (
@@ -73,11 +83,19 @@ export default class Reviews extends Component<{}> {
   )
 
   render() {
-    let cards = this.places.map(place => 
-      <Card key={place.place_id}><PlaceCard place={place}></PlaceCard></Card>
-    );
+    if (this.state.loading || !this.locations) {
+      return <ActivityIndicator size="large" color="#ccc" style={{ flex: 1 }} />;
+    }
 
-    if (!this.state.empty && this.places.length > 0) {
+    let cards = this.locations.map(location => {
+      if (location.place) {
+        return <Card key={location.place.place_id}><PlaceCard place={location.place}></PlaceCard></Card>;
+      } else {
+        return <Card key={location.question.category_id}><QuestionCard question={location.question}></QuestionCard></Card>;
+      }
+    });
+
+    if (!this.state.empty && this.locations.length > 0) {
       return (
         <View style={{flex: 1}}>
           <CardStack

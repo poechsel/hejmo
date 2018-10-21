@@ -22,7 +22,7 @@ const ProfileRoute = () => <ProfilePage></ProfilePage>;
 
 export default class App extends Component<{}> {
   state = {
-    index: 2,
+    index: 1,
     routes: [
       { key: 'home', title: 'Home', icon: 'home' },
       { key: 'reviews', title: 'Reviews', icon: 'star' },

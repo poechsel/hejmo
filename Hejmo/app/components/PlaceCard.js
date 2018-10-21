@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import { withTheme, Button, Card, Title, Text, Paragraph } from 'react-native-paper';
+import timeago from 'timeago.js';
 
 function PlaceCard(props) {
   const { theme, place, ...rest } = props;
@@ -24,9 +24,8 @@ function PlaceCard(props) {
         </View>
         <View style={styles.status}>
           <Icon style={styles.icons} name="access-time" size={20} />
-          <Text>{place.date_of_visit}</Text>
+          <Text>{timeago().format(place.date_of_visit * 1000)}</Text>
         </View>
-        <Paragraph style={styles.description}>{place.description}</Paragraph>
       </Card.Content>
     </Card>
   );
