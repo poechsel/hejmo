@@ -49,13 +49,16 @@ def distance_with_confidence(users_profiles, user1, user2, selected_categories=N
     distance = 0
     normalizer = 0
     if selected_categories == None:
-        for cat, value in profile1.items():
+        for cat, _ in profile1.items():
             total_conf = profile1[cat]["confidence"]*profile2[cat]["confidence"]
             normalizer += total_conf
             distance += ratings_distance_fn(profile1[cat]["rating"], profile2[cat]["rating"])
     else:
         for cat in selected_categories:
-
+            total_conf = profile1[cat]["confidence"]*profile2[cat]["confidence"]
+            normalizer += total_conf
+            distance += ratings_distance_fn(profile1[cat]["rating"], profile2[cat]["rating"])
+    
     return distance/normalizer
 
 ## Input:

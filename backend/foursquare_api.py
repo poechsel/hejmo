@@ -4,12 +4,13 @@
 import foursquare
 import json
 import auth.foursquare_secret as secret
+import os
 
 categories_list_url = 'https://api.foursquare.com/v2/venues/categories'
 venue_from_coordinates_url = 'https://api.foursquare.com/v2/venues/search'
 
 
-categories_json_file = open("backend/data/categories.json")
+categories_json_file = open(os.path.join(os.path.dirname(__file__), "data/categories.json"))
 categories_json = categories_json_file.read()
 categories = json.loads(categories_json)
 
@@ -58,7 +59,7 @@ def get_venue_ID(latitude, longitude):
         llAcc='100'
     )
 
-    venues = client.Venues.search(client, params)
+    venues = client.venues.search(params)
 
     min_venue = min(venues["venues"], key = lambda venue : venue.get("distance", float("+inf")))
 
@@ -73,12 +74,12 @@ def get_venue_ID(latitude, longitude):
     return min_venue
 
 def get_venue_details(venue_ID):
-    return client.Venues(venue_ID)
+    return client.venues(venue_ID)
 
 
 def get_venue_category(venue_ID):
     pass
 
-print(get_venue_ID( 52.235823, 21.000785))
+# print(get_venue_ID( 52.235823, 21.000785))
 #print(get_venue_details("412d2800f964a520df0c1fe3"))
 #print(json.dumps(client.venues.categories()))

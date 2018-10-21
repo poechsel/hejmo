@@ -4,14 +4,6 @@ import json
 import database as db
 import recommendation_system
 
-user_ratings = {}
-user_profils = {}
-locations_to_rate = {}
-venues = {}
-ratings = db.get_ratings()
-profiles = db.get_profiles()
-userlist = db.get_userlist()
-
 
 '''
 Get vector profile of an user.
@@ -118,6 +110,7 @@ def put_location(user_id, place_id, rating, time_of_visit):
             user_ratings[place_id]["rating"], user_ratings[place_id]["confidence"], rating)
         user_ratings[place_id]["visits"].append(time_of_visit)
     else:
+        user_ratings[place_id] = {}
         user_ratings[place_id]["rating"] = rating
         user_ratings[place_id]["confidence"] = 1.0
         user_ratings[place_id]["visits"] = [time_of_visit]
@@ -128,7 +121,9 @@ def put_location(user_id, place_id, rating, time_of_visit):
         user_profile[category]["rating"], user_profile[category]["confidence"] = (
             recommendation_system.update_rating_flat(
                 user_profile[category]["rating"], user_profile[category]["confidence"], rating)
-        )
+        ) 
+    db.flush_user_ratings(user_id, user_ratings)
+    db.flush_user_profile(user_id, user_profile)
     return "OK"
 
 '''
@@ -141,4 +136,5 @@ def put_affinity(user_id, category, affinity):
         recommendation_system.update_rating_flat(
             user_profile[category]["rating"], user_profile[category]["confidence"], affinity)
     )
+    db.flush_user_profile(user_id, user_profile)
     return "OK"
