@@ -70,7 +70,7 @@ def distance_with_confidence(users_profiles, user1, user2, selected_categories=N
 # lon, lat: coordinates
 ## Output:
 # list of ids of users that have recommendations for the selected category near coordinates.
-def filter_by_location(users_visits, places, requested_category, lon, lat, max_distance=3000):
+def filter_by_location(users_visits, places, requested_category, lon, lat, max_distance=10000):
     output = []
     for uid, visits in users_visits.items():
         n_potential = 0
@@ -117,7 +117,10 @@ def get_time_value(visit_time, target_time):
 #                    @4500m score is divided by 10. (possibility to tweak this/make it a parameter)
 def get_distance_value(lon, lat, target_lon, target_lat):
     distance = utils.gps_distance(lon, lat, target_lon, target_lat)
-    return np.exp(-(distance/3000)**2)
+    if distance > 10000:
+        return 0
+    else:
+        return np.exp(-(distance/3000)**2)
 
 # negative vote when bad review is given.
 def get_user_value(user_score, review, confidence):
