@@ -36,23 +36,23 @@ export default function Profile(props) {
           <Title style={{ marginTop: 20 }}>My past reviews</Title>
           <Surface style={styles.reviews}>
             <List.Item
-              title="First Item"
-              description="Item description"
+              title="Higuma"
               right={props => <IconButton {...props} icon="edit" />}
             />
             <List.Item
-              title="First Item"
-              description="Item description"
+              title="Vieux Langingre"
               right={props => <IconButton {...props} icon="edit" />}
             />
             <List.Item
-              title="First Item"
-              description="Item description"
+              title="Ladurée"
               right={props => <IconButton {...props} icon="edit" />}
             />
             <List.Item
-              title="First Item"
-              description="Item description"
+              title="Urgence bar"
+              right={props => <IconButton {...props} icon="edit" />}
+            />
+            <List.Item
+              title="Mabillon"
               right={props => <IconButton {...props} icon="edit" />}
             />
           </Surface>

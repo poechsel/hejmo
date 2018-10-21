@@ -19,7 +19,7 @@ export default function GeniusButton(props) {
   return (
     <TouchableRipple
       style={[styles.outside, {backgroundColor: props.color}]}
-      onPress={() => console.log('Pressed')}>
+      onPress={props.onPress}>
       <View style={styles.inside}>
         <IconComp name={icon} size={70} style={styles.icon}></IconComp>
         <Text style={styles.text}>{props.text}</Text>

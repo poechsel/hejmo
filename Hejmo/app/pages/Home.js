@@ -1,52 +1,22 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import { Banner } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { StyleSheet, Text, View } from 'react-native';
 
-import Genius from '../components/Genius';
+import HomeGenius from './HomeGenius';
+import HomeListing from './HomeListing';
 
 export default class Home extends Component<{}> {
   state = {
-    visible: true
+    page: 0,
   };
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Banner
-          visible={this.state.visible}
-          actions={[
-            {
-              label: 'Dismiss',
-              onPress: () => this.setState({ visible: false }),
-            },
-            {
-              label: 'Open Reviews',
-              onPress: () => this.setState({ visible: false }),
-            },
-          ]}
-          image={({ size }) => <Icon size={20} name="star" color="#ddd"></Icon>}
-        >
-          You have 3 new places to review!
-        </Banner>
-        <View style={styles.wrapper}>
-          <Genius></Genius>
-        </View>
-      </View>
-    );
+    const PAGE_COMPS = [
+      <HomeGenius onPageChange={page => this.setState({page})}></HomeGenius>,
+      <HomeListing category="4d4b7105d754a06374d81259" onPageChange={page => this.setState({page})}></HomeListing>,
+      <HomeListing category="4d4b7105d754a06376d81259" onPageChange={page => this.setState({page})}></HomeListing>,
+      <HomeListing category="4bf58dd8d48988d181941735" onPageChange={page => this.setState({page})}></HomeListing>,
+    ];
+
+    return PAGE_COMPS[this.state.page];
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-
-  wrapper: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    margin: 20,
-  }
-});

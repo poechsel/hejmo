@@ -8,9 +8,6 @@ import QuestionCard from '../components/QuestionCard';
 import Config from '../config.json';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-// Mock data (the API calls will come later).
-import mockReviews from '../mock/reviews.json';
-
 export default class Reviews extends Component<{}> {
   constructor(props) {
     super(props);
