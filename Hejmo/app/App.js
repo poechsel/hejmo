@@ -5,11 +5,9 @@ import { BottomNavigation, Text, Appbar } from 'react-native-paper';
 /* Theming */
 const theme = {
   ...DefaultTheme,
-  // roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    // primary: '#3498db',
-    // accent: '#f1c40f',
+    primary: '#7569ff',
   }
 };
 
@@ -24,7 +22,7 @@ const ProfileRoute = () => <ProfilePage></ProfilePage>;
 
 export default class App extends Component<{}> {
   state = {
-    index: 0,
+    index: 2,
     routes: [
       { key: 'home', title: 'Home', icon: 'home' },
       { key: 'reviews', title: 'Reviews', icon: 'star' },
