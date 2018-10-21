@@ -21,13 +21,14 @@ def get_profile(user_id):
 
 '''
 Get profile summary of an user.
-{
-    cat_N: {
+[
+    {
+        category_id: string;
         display_name: string;
         icon_url: string;
         interest: float;
     }
-}
+]
 '''
 @app.route('/profile_summary/<int:user_id>', methods=['GET'])
 def get_profile_summary(user_id):
@@ -65,7 +66,7 @@ def get_locations_to_rate(user_id):
     user_data = db.get_user_locations_to_rate(user_id)
     
     user_profile = db.get_user_profile(user_id)
-    questions_to_ask, category_level = recommendation_system.find_questions_to_ask(user_profile)
+    questions_to_ask = recommendation_system.find_questions_to_ask(user_profile)
     
     output_places = []
     for entry in user_data:
@@ -81,24 +82,26 @@ def get_locations_to_rate(user_id):
     output_categories = []
     for category in questions_to_ask:
         output_categories.append({
-            "place_id": category,
+            "category_id": category,
             "name": foursquare_api.get_category_display_name(category),
-            "photo_url": foursquare_api.get_category_icon_url(category)
+            "icon_url": foursquare_api.get_category_icon_url(category)
         })
 
-    if category_level == 1:
-        question_probability = 0.5
-    else:
-        question_probability = 0.25
+    print(len(output_categories), len(output_places))
+    question_probability = 0.3
 
     output = []
-    for _ in range(30):
+    for _ in range(10):
         if np.random.random() < question_probability and len(output_categories) > 0:
             output.append({"question": output_categories[0]})
             output_categories = output_categories[1:]
         elif len(output_places) > 0:
             output.append({"place": output_places[0]})
             output_places = output_places[1:]
+        elif len(output_categories) > 0:
+            output.append({"question": output_categories[0]})
+            output_categories = output_categories[1:]
+
     return json.dumps(output)
 
 
@@ -115,6 +118,37 @@ Get rated locations of an user.
 @app.route('/locations/<int:user_id>', methods=['GET'])
 def get_locations(user_id):
     return json.dumps(db.get_user_ratings(user_id))
+
+
+'''
+Get last reviews of an user.
+array[
+    {
+        name: string;
+        description: string;
+        rating: float;
+        number_of_visits: int;
+        last_visit: int;
+    }
+]
+'''
+@app.route('/locations_summary/<int:user_id>', methods=['GET'])
+def get_locations_summary(user_id):
+    user_rating = db.get_user_ratings(user_id)
+    time_place = [(max(rating["visits"]), place) for (place, rating) in user_rating.items()]
+    list.sort(time_place, reverse=True)
+
+    data = []
+    for time, place in time_place[:15]:
+        data.append({
+            "name": db.get_venue_data(place)["name"],
+            "description": db.get_venue_data(place)["description"],
+            "rating": user_rating[place]["rating"],
+            "number_of_visits": len(user_rating[place]["visits"]),
+            "last_visit": time
+        })
+    print(data)
+    return json.dumps(data)
 
 
 '''
