@@ -70,14 +70,14 @@ def distance_with_confidence(users_profiles, user1, user2, selected_categories=N
 # lon, lat: coordinates
 ## Output:
 # list of ids of users that have recommendations for the selected category near coordinates.
-def filter_by_location(users_visits, places, requested_category, lon, lat, max_distance=10000):
+def filter_by_location(users_visits, places, requested_category, lon, lat, max_distance=15):
     output = []
     for uid, visits in users_visits.items():
         n_potential = 0
         for place_id, visit_data in visits.items():
             rating, confidence_level = visit_data["rating"], visit_data["confidence"]
             categories, lon2, lat2 = places[place_id]["categories"], places[place_id]["longitude"], places[place_id]["latitude"]
-            if utils.gps_distance(lon, lat, lon2, lat2) < max_distance and has_subcategory_of(categories, requested_category):
+            if utils.gps_distance(lat, lon, lat2, lon2) < max_distance and has_subcategory_of(categories, requested_category):
                 if rating*confidence_level >= 0.5:
                     n_potential += 1
         if n_potential > 0:
@@ -115,12 +115,12 @@ def get_time_value(visit_time, target_time):
 # between 0 and 1
 # Gaussian decrease: @2500m score is divided by 2. 
 #                    @4500m score is divided by 10. (possibility to tweak this/make it a parameter)
-def get_distance_value(lon, lat, target_lon, target_lat):
-    distance = utils.gps_distance(lon, lat, target_lon, target_lat)
-    if distance > 10000:
+def get_distance_value(lat, lon, target_lat, target_lon):
+    distance = utils.gps_distance(lat, lon, target_lat, target_lon)
+    if distance > 15:
         return 0
     else:
-        return np.exp(-(distance/3000)**2)
+        return np.exp(-(distance/8)**2)
 
 # negative vote when bad review is given.
 def get_user_value(user_score, review, confidence):
@@ -139,7 +139,7 @@ def vote_for_places(users_ratings, places, scores, target_category, target_time,
 
             if has_subcategory_of(categories, target_category):
                 place_interest_time = get_time_value(visits, target_time)
-                place_interest_distance = get_distance_value(lon, lat, target_lon, target_lat)
+                place_interest_distance = get_distance_value(lat, lon, target_lat, target_lon)
                 place_interest_user = get_user_value(score, rating, confidence_level)
 
                 vote_value = place_interest_distance*place_interest_time*place_interest_user

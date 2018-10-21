@@ -150,6 +150,7 @@ def get_locations_summary(user_id):
     print(data)
     return json.dumps(data)
 
+import utils
 
 '''
 Returns recommendations for an user.
@@ -164,8 +165,8 @@ Returns recommendations for an user.
     }]
 }
 '''
-@app.route('/recommendations/<int:user_id>/<category>/<float:lng>/<float:lat>/<int:time>', methods=['GET'])
-def get_recommendations(user_id, category, lng, lat, time):
+@app.route('/recommendations/<int:user_id>/<category>/<float:lat>/<float:lng>/<int:time>', methods=['GET'])
+def get_recommendations(user_id, category, lat, lng, time):
     users_profiles = db.get_profiles()
     users_rating = db.get_ratings()
     places = db.get_venues_data()
@@ -174,12 +175,20 @@ def get_recommendations(user_id, category, lng, lat, time):
     
     output = []
     for res in results[:10]:
+        print( db.get_venue_data(res["PID"]))
         output.append({
             "place_id": res["PID"],
             "matching_info": {
                 "matched_people_score": res["score"]
             },
-            "tip": ""
+            "tip": "",
+            "name": db.get_venue_data(res["PID"])["name"],
+            "distance": utils.gps_distance(lat, lng, db.get_venue_data(res["PID"])["latitude"], db.get_venue_data(res["PID"])["longitude"]),
+            "lat": db.get_venue_data(res["PID"])["latitude"],
+            "lon": db.get_venue_data(res["PID"])["longitude"],
+            "photo_url": db.get_venue_data(res["PID"])["photo"],
+            "description": db.get_venue_data(res["PID"])["description"],
+            "location": ""
         })
     return json.dumps({"recommendations": output})
 

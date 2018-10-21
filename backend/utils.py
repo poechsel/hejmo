@@ -1,14 +1,19 @@
-import numpy as np
+from math import sin, cos, sqrt, atan2, radians
 
 ## Input: 2 GPS coordinates in degrees
 ## Output: distance between the two points in meters.
-def gps_distance(lon1, lat1, lon2, lat2):
-    R = 6371e3
-    phi1 = np.deg2rad(lat1)
-    phi2 = np.deg2rad(lat2)
-    delta_phi = np.deg2rad(lat2 - lat1)
-    delta_lambda = np.deg2rad(lon2 - lon1)
+def gps_distance(lat1, lon1, lat2, lon2):
+    R = 6373.0
 
-    a = np.sin(delta_phi/2) * np.sin(delta_phi/2) + np.cos(phi1) * np.cos(phi2) * np.sin(delta_lambda/2) * np.sin(delta_lambda/2)
-    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
-    return R * c / 1000.0
+    lat1 = radians(lat1)
+    lon1 = radians(lon1)
+    lat2 = radians(lat2)
+    lon2 = radians(lon2)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    return R * c
